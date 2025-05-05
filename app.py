@@ -45,6 +45,30 @@ city_data = pd.DataFrame({
     'Population': [9564, 1502, 1442, 875]
 })
 
+detailed_asset_data = pd.DataFrame({
+    'Category': ['Physical Space'] * 4 + ['Individuals'] * 4 + ['Associations'] * 11 +
+                ['Online Resources'] * 8 + ['Institutions'] * 2 + ['Economy'] * 3,
+    'Item': [
+        'Drake Community Library', 'Conard Environmental Research Area (CERA)',
+        'Jacob Krumm Nature Preserve', 'Uhlenhop Arboretum',
+        'JD Griffith', 'Poweshiek Board of Conservation',
+        'Poweshiek Board of Health', 'Jon Andelson and Tommy Hexter (CARES)',
+        'Iowa Environmental Council', 'Iowa Faith and Climate Network',
+        'Iowa Alliance for Responsible Agriculture', 'Jefferson County Farmers and Neighbors',
+        'Socially Responsible Agriculture Project', 'Iowa Citizens for Community Improvement',
+        'Izaak Walton League', 'Food and Water Watch',
+        'Poweshiek County Soil and Water Conservation', 'Poweshiek CARES',
+        'Imagine Grinnell',
+        'Purple Air Quality Monitoring', 'EWG Tap Water Database', 'EPA Superfund Site',
+        'IEC Environmental Justice Map', 'Izaak Walton League Nitrate Map',
+        'Get into Grinnell Blog', 'Grinnell Flash News', 'Advocacy Toolkit',
+        'Air Monitoring Summer Project', 'Working on..',
+        'Iowa State Revolving Funds (SRF)', 'Lead Service Lines Replacement',
+        'Center for Industrial Research and Service'
+    ],
+    'Count': [1] * 32  # Equal weight; adjust if needed
+})
+
 # Demographics Tab
 with tab1:
     st.subheader("Demographic Indicators")
@@ -79,6 +103,13 @@ with tab3:
     asset_fig = px.pie(asset_data, names='Asset Type', values='Count',
                        title='Community Asset Distribution', hole=0.4)
     st.plotly_chart(asset_fig, use_container_width=True)
+
+    detailed_fig = px.treemap(detailed_asset_data,
+                               path=['Category', 'Item'],
+                               values='Count',
+                               title='Detailed Community Assets',
+                               height=600)
+    st.plotly_chart(detailed_fig, use_container_width=True)
 
 # Geography Tab
 with tab4:
