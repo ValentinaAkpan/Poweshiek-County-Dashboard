@@ -46,50 +46,28 @@ city_data = pd.DataFrame({
 })
 
 # Detailed assets table data
-# Community Assets Tab
-with tab3:
-    st.subheader("Community Assets")
-    st.write("An overview of the county’s strong network of associations, institutions, individuals, and online resources driving local action.")
-
-    asset_fig = px.pie(asset_data, names='Asset Type', values='Count',
-                       title='Community Asset Distribution', hole=0.4)
-    st.plotly_chart(asset_fig, use_container_width=True)
-
-    # Prepare detailed assets table
-    detailed_asset_table = pd.DataFrame({
-        'Category': ['Physical Space'] * 4 + ['Individuals'] * 4 + ['Associations'] * 11 +
-                    ['Online Resources'] * 8 + ['Institutions'] * 2 + ['Economy'] * 3,
-        'Item': [
-            'Drake Community Library', 'Conard Environmental Research Area (CERA)',
-            'Jacob Krumm Nature Preserve', 'Uhlenhop Arboretum',
-            'JD Griffith', 'Poweshiek Board of Conservation',
-            'Poweshiek Board of Health', 'Jon Andelson and Tommy Hexter (CARES)',
-            'Iowa Environmental Council', 'Iowa Faith and Climate Network',
-            'Iowa Alliance for Responsible Agriculture', 'Jefferson County Farmers and Neighbors',
-            'Socially Responsible Agriculture Project', 'Iowa Citizens for Community Improvement',
-            'Izaak Walton League', 'Food and Water Watch',
-            'Poweshiek County Soil and Water Conservation', 'Poweshiek CARES',
-            'Imagine Grinnell',
-            'Purple Air Quality Monitoring', 'EWG Tap Water Database', 'EPA Superfund Site',
-            'IEC Environmental Justice Map', 'Izaak Walton League Nitrate Map',
-            'Get into Grinnell Blog', 'Grinnell Flash News', 'Advocacy Toolkit',
-            'Air Monitoring Summer Project', 'Working on..',
-            'Iowa State Revolving Funds (SRF)', 'Lead Service Lines Replacement',
-            'Center for Industrial Research and Service'
-        ]
-    })
-
-    detailed_asset_table = detailed_asset_table.sort_values(['Category', 'Item']).reset_index(drop=True)
-    detailed_asset_table.index += 1  # Start index at 1
-
-    st.write("**Detailed Community Asset List**")
-
-    # Grouped expandable sections
-    for category in detailed_asset_table['Category'].unique():
-        with st.expander(f"{category}"):
-            items = detailed_asset_table[detailed_asset_table['Category'] == category][['Item']]
-            st.table(items.reset_index(drop=True))
-
+detailed_asset_table = pd.DataFrame({
+    'Category': ['Physical Space'] * 4 + ['Individuals'] * 4 + ['Associations'] * 11 +
+                ['Online Resources'] * 8 + ['Institutions'] * 2 + ['Economy'] * 3,
+    'Item': [
+        'Drake Community Library', 'Conard Environmental Research Area (CERA)',
+        'Jacob Krumm Nature Preserve', 'Uhlenhop Arboretum',
+        'JD Griffith', 'Poweshiek Board of Conservation',
+        'Poweshiek Board of Health', 'Jon Andelson and Tommy Hexter (CARES)',
+        'Iowa Environmental Council', 'Iowa Faith and Climate Network',
+        'Iowa Alliance for Responsible Agriculture', 'Jefferson County Farmers and Neighbors',
+        'Socially Responsible Agriculture Project', 'Iowa Citizens for Community Improvement',
+        'Izaak Walton League', 'Food and Water Watch',
+        'Poweshiek County Soil and Water Conservation', 'Poweshiek CARES',
+        'Imagine Grinnell',
+        'Purple Air Quality Monitoring', 'EWG Tap Water Database', 'EPA Superfund Site',
+        'IEC Environmental Justice Map', 'Izaak Walton League Nitrate Map',
+        'Get into Grinnell Blog', 'Grinnell Flash News', 'Advocacy Toolkit',
+        'Air Monitoring Summer Project', 'Working on..',
+        'Iowa State Revolving Funds (SRF)', 'Lead Service Lines Replacement',
+        'Center for Industrial Research and Service'
+    ]
+})
 
 # Demographics Tab
 with tab1:
@@ -122,12 +100,23 @@ with tab3:
     st.subheader("Community Assets")
     st.write("An overview of the county’s strong network of associations, institutions, individuals, and online resources driving local action.")
 
-    asset_fig = px.pie(asset_data, names='Asset Type', values='Count',
-                       title='Community Asset Distribution', hole=0.4)
-    st.plotly_chart(asset_fig, use_container_width=True)
+    # Show pie chart once
+    pie_fig = px.pie(asset_data, names='Asset Type', values='Count',
+                     title='Community Asset Distribution', hole=0.4)
+    st.plotly_chart(pie_fig, use_container_width=True)
+
+    # Sort and reset index
+    detailed_asset_table = detailed_asset_table.sort_values(['Category', 'Item']).reset_index(drop=True)
+    detailed_asset_table.index += 1
 
     st.write("**Detailed Community Asset List**")
-    st.dataframe(detailed_asset_table, use_container_width=True)
+
+    # Group into expanders to avoid duplicate widget errors
+    for category in detailed_asset_table['Category'].unique():
+        with st.expander(f"{category}"):
+            items = detailed_asset_table[detailed_asset_table['Category'] == category][['Item']]
+            items.reset_index(drop=True, inplace=True)
+            st.table(items)
 
 # Geography Tab
 with tab4:
