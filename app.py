@@ -45,7 +45,8 @@ city_data = pd.DataFrame({
     'Population': [9564, 1502, 1442, 875]
 })
 
-detailed_asset_data = pd.DataFrame({
+# Detailed assets table data
+detailed_asset_table = pd.DataFrame({
     'Category': ['Physical Space'] * 4 + ['Individuals'] * 4 + ['Associations'] * 11 +
                 ['Online Resources'] * 8 + ['Institutions'] * 2 + ['Economy'] * 3,
     'Item': [
@@ -65,8 +66,7 @@ detailed_asset_data = pd.DataFrame({
         'Air Monitoring Summer Project', 'Working on..',
         'Iowa State Revolving Funds (SRF)', 'Lead Service Lines Replacement',
         'Center for Industrial Research and Service'
-    ],
-    'Count': [1] * 32  # Equal weight; adjust if needed
+    ]
 })
 
 # Demographics Tab
@@ -104,12 +104,8 @@ with tab3:
                        title='Community Asset Distribution', hole=0.4)
     st.plotly_chart(asset_fig, use_container_width=True)
 
-    detailed_fig = px.treemap(detailed_asset_data,
-                               path=['Category', 'Item'],
-                               values='Count',
-                               title='Detailed Community Assets',
-                               height=600)
-    st.plotly_chart(detailed_fig, use_container_width=True)
+    st.write("**Detailed Community Asset List**")
+    st.dataframe(detailed_asset_table, use_container_width=True)
 
 # Geography Tab
 with tab4:
