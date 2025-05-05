@@ -100,21 +100,27 @@ with tab3:
     st.subheader("Community Assets")
     st.write("An overview of the county’s strong network of associations, institutions, individuals, and online resources driving local action.")
 
-    # Show pie chart once
+    # Pie chart
     pie_fig = px.pie(asset_data, names='Asset Type', values='Count',
                      title='Community Asset Distribution', hole=0.4)
     st.plotly_chart(pie_fig, use_container_width=True)
 
-    # Sort and reset index
-    detailed_asset_table = detailed_asset_table.sort_values(['Category', 'Item']).reset_index(drop=True)
-    detailed_asset_table.index += 1
+    # Bar chart for counts by category
+    count_data = detailed_asset_table.groupby('Category').size().reset_index(name='Count')
+    bar_fig = px.bar(count_data, x='Category', y='Count', text='Count',
+                     title='Asset Counts by Category')
+    st.plotly_chart(bar_fig, use_container_width=True)
+
+    # Sort and reset index for table
+    detailed_asset_table_sorted = detailed_asset_table.sort_values(['Category', 'Item']).reset_index(drop=True)
+    detailed_asset_table_sorted.index += 1
 
     st.write("**Detailed Community Asset List**")
 
-    # Group into expanders to avoid duplicate widget errors
-    for category in detailed_asset_table['Category'].unique():
+    # Grouped expanders
+    for category in detailed_asset_table_sorted['Category'].unique():
         with st.expander(f"{category}"):
-            items = detailed_asset_table[detailed_asset_table['Category'] == category][['Item']]
+            items = detailed_asset_table_sorted[detailed_asset_table_sorted['Category'] == category][['Item']]
             items.reset_index(drop=True, inplace=True)
             st.table(items)
 
